@@ -10,6 +10,7 @@ import {
   Put,
   UseInterceptors,
 } from '@nestjs/common';
+import { ParamId } from 'src/decorators/param-id.decorator';
 import { LogInterceptor } from 'src/interceptors/log.interceptor';
 import { UserService } from './user.service';
 import { CreateUserDto } from './userDto/create-user.dto';
@@ -29,19 +30,16 @@ export class UserController {
     return this.userService.list();
   }
   @Get(':id')
-  async showUser(@Param('id', ParseIntPipe) id: number) {
+  async showUser(@ParamId() id: number) {
     return this.userService.showUser(id);
   }
   @Put(':id')
-  async replaceUser(
-    @Param('id', ParseIntPipe) id: number,
-    @Body() replaceUser: UpdateUserDto,
-  ) {
+  async replaceUser(@ParamId() id: number, @Body() replaceUser: UpdateUserDto) {
     return this.userService.updateUser(id, replaceUser);
   }
   @Patch(':id')
   async updateUser(
-    @Param('id', ParseIntPipe) id: number,
+    @ParamId() id: number,
     @Body() updateUser: UpdatePatchUserDto,
   ) {
     return this.userService.updateUserPartial(id, updateUser);
