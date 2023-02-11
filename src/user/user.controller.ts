@@ -30,7 +30,7 @@ export class UserController {
     return this.userService.list();
   }
   @Get(':id')
-  async showUser(@ParamId() id: number) {
+  async showUser(@Param('id') id: number) {
     return this.userService.showUser(id);
   }
   @Put(':id')

@@ -25,7 +25,7 @@ export class UserService {
     await this.exists(id);
     return this.prisma.user.findUnique({
       where: {
-        id,
+        id: +id,
       },
     });
   }
@@ -69,6 +69,8 @@ export class UserService {
     });
   }
   async exists(id: number) {
+    //
+    console.log(typeof id);
     if (
       !(await this.prisma.user.count({
         where: {
