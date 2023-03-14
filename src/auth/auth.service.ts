@@ -8,6 +8,7 @@ import { User } from '@prisma/client';
 import { PrismaService } from 'src/prisma/prisma.service';
 import { UserService } from 'src/user/user.service';
 import { AuthRegisterDto } from './dto/auth.register.dto';
+import * as bcrypt from 'bcrypt';
 
 @Injectable()
 export class AuthService {
@@ -66,6 +67,9 @@ export class AuthService {
       },
     });
     if (!user) {
+      throw new UnauthorizedException('E-mail or password is incorrect');
+    }
+    if (!bcrypt.compare(password, user.password)) {
       throw new UnauthorizedException('E-mail or password is incorrect');
     }
     return this.createToken(user);

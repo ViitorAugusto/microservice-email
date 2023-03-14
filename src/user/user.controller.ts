@@ -11,6 +11,7 @@ import {
   UseGuards,
   UseInterceptors,
 } from '@nestjs/common';
+import { ThrottlerModule } from '@nestjs/throttler';
 import { ParamId } from 'src/decorators/param-id.decorator';
 import { Roles } from 'src/decorators/roles.decorator';
 import { Role } from 'src/enums/role.enum';
@@ -22,13 +23,12 @@ import { CreateUserDto } from './userDto/create-user.dto';
 import { UpdatePatchUserDto } from './userDto/update-patch-user.dto';
 import { UpdateUserDto } from './userDto/update-put-user.dto';
 
-@Roles(Role.Admin)
-@UseGuards(AuthGuard, RoleGuard)
+@UseGuards(ThrottlerModule, AuthGuard, RoleGuard)
 @UseInterceptors(LogInterceptor)
 @Controller('users')
 export class UserController {
   constructor(private readonly userService: UserService) {}
-
+  @Roles(Role.Admin)
   @Post()
   async createUser(@Body() createUser: CreateUserDto) {
     return this.userService.create(createUser);
@@ -43,7 +43,7 @@ export class UserController {
   async showUser(@Param('id') id: number) {
     return this.userService.showUser(id);
   }
-
+  @Roles(Role.Admin)
   @Put(':id')
   async replaceUser(@ParamId() id: number, @Body() replaceUser: UpdateUserDto) {
     return this.userService.updateUser(id, replaceUser);
@@ -56,7 +56,7 @@ export class UserController {
   ) {
     return this.userService.updateUserPartial(id, updateUser);
   }
-
+  @Roles(Role.Admin)
   @Delete(':id')
   async delete(@Param('id', ParseIntPipe) id: number) {
     return this.userService.delete(id);

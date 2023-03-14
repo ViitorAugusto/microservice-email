@@ -11,6 +11,12 @@ export class RoleGuard implements CanActivate {
       context.getHandler(),
       context.getClass(),
     ]);
+
+    console.log(
+      ' Requer permissão Admin para fazer essa alteracão ',
+      requerideRoles,
+    );
+
     if (!requerideRoles) {
       return true;
     }
